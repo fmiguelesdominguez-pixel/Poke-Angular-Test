@@ -1,0 +1,11 @@
+<div class="simple-grid">
+      @for (pokemon of pokemons(); track pokemon.id) {
+        <div class="grid-item">
+          <img
+            [src]="pokemon.sprite_animated"
+            [alt]="pokemon.name"
+            loading="lazy"
+          />
+        </div>
+      }
+    </div>

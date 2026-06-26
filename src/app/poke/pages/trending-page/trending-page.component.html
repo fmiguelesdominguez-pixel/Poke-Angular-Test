@@ -1,0 +1,6 @@
+<!--<section class="py-5">
+  <poke-list-component [poke]="pokeService.trendingPokemon()" />
+</section> -->
+<div class="h-screen overflow-y-auto" (scroll)="onScroll($event)" #groupDiv>
+  <poke-masonry-component [pokemons]="pokeService.trendingPokemon()" />
+</div>

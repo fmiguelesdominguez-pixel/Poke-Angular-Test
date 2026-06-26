@@ -1,3 +1,32 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./poke/pages/dashboard-page/dashboard-page.component'),
+    children: [
+      {
+        path: 'trending',
+        loadComponent: () => import('./poke/pages/trending-page/trending-page.component'),
+      },
+
+      {
+        path: 'search',
+        loadComponent: () => import('./poke/pages/search-page/search-page.component'),
+      },
+      {
+        path: 'history/:query',
+        loadComponent: () => import('./poke/pages/poke-history/poke-history.component'),
+      },
+      {
+        path: '**',
+        redirectTo: 'trending',
+      },
+    ],
+  },
+
+  {
+    path: '**',
+    redirectTo: 'dashboard',
+  },
+];

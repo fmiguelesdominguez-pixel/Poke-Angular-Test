@@ -1,0 +1,8 @@
+<div class="p-2">
+  <h3 class="text-2xl font-bold mt-4">Mostrando: {{ query() }}</h3>
+  <hr />
+
+  <section class="py-5">
+    <poke-list-component [poke]="pokemonByKey()" />
+  </section>
+</div>
