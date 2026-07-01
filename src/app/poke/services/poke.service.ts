@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
-import { environment } from '@enviroments/environment';
+import { environment } from '../../../environments/environment';
 import { Observable, switchMap, forkJoin, map, tap } from 'rxjs';
 import {
   PokemonCatalog,
@@ -8,6 +8,7 @@ import {
   PokemonSpriteResponse,
   PokemonTypeResponse,
 } from '../interfaces/pokemon.interfaces';
+import { Pokemon } from '../interfaces/poke.interfaces';
 import { PokeMapper } from '../mapper/poke.mappper';
 
 const HISTORY_KEY = 'pokemon_search_history';
@@ -212,5 +213,9 @@ export class PokemonService {
 
   getHistoryPokemon(query: string): PokemonCatalog[] {
     return this.searchHistory()[query] ?? [];
+  }
+
+  getPokemonDetails(id: number): Observable<Pokemon> {
+    return this.http.get<Pokemon>(`${environment.apiUrl}/pokemon/${id}`);
   }
 }

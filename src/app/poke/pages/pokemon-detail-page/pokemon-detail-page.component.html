@@ -1,0 +1,53 @@
+<div class="pokemon-detail-container">
+  @if (loading) {
+    <div class="loading">Cargando...</div>
+  } @else if (error) {
+    <div class="error">
+      <p>Error al cargar el pokemon</p>
+      <button (click)="goBack()">Volver</button>
+    </div>
+  } @else if (pokemon) {
+    <div class="pokemon-detail">
+      <button class="back-button" (click)="goBack()">
+        <i class="fa-solid fa-arrow-left"></i> Volver
+      </button>
+      
+      <h1 class="pokemon-name">{{ pokemon.name | titlecase }}</h1>
+      
+      <div class="sprites-container">
+        <div class="sprite-card">
+          <h3>Normal</h3>
+          <img [src]="getNormalSprite()" [alt]="pokemon.name" class="pokemon-sprite" />
+        </div>
+        <div class="sprite-card">
+          <h3>Shiny</h3>
+          <img [src]="getShinySprite()" [alt]="pokemon.name + ' shiny'" class="pokemon-sprite" />
+        </div>
+      </div>
+
+      <div class="pokemon-info">
+        <div class="info-item">
+          <span class="info-label">Peso:</span>
+          <span class="info-value">{{ pokemon.weight / 10 }} kg</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Altura:</span>
+          <span class="info-value">{{ pokemon.height / 10 }} m</span>
+        </div>
+      </div>
+
+      <div class="stats-container">
+        <h2>Estadísticas</h2>
+        @for (stat of pokemon.stats; track stat.stat.name) {
+          <div class="stat-item">
+            <span class="stat-name">{{ stat.stat.name | titlecase }}</span>
+            <div class="stat-bar">
+              <div class="stat-fill" [style.width.%]="stat.base_stat / 2"></div>
+            </div>
+            <span class="stat-value">{{ stat.base_stat }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

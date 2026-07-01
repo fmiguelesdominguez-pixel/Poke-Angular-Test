@@ -252,7 +252,7 @@ interface PokemonPastStat {
 
 // ---- Pokemon (raíz) ----
 
-interface Pokemon {
+export interface Pokemon {
   abilities: PokemonAbility[];
   base_experience: number;
   cries: PokemonCries;

@@ -23,6 +23,10 @@ export const routes: Routes = [
         loadComponent: () => import('./poke/pages/poke-history/poke-history.component'),
       },
       {
+        path: 'pokemon/:id',
+        loadComponent: () => import('./poke/pages/pokemon-detail-page/pokemon-detail-page.component'),
+      },
+      {
         path: '**',
         redirectTo: 'trending',
       },

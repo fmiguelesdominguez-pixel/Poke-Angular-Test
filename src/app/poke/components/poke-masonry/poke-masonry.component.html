@@ -1,6 +1,6 @@
 <div class="simple-grid">
       @for (pokemon of pokemons(); track pokemon.id) {
-        <div class="grid-item">
+        <div class="grid-item" (click)="onPokemonClick(pokemon)" style="cursor: pointer;">
           <img
             [src]="pokemon.sprite_animated"
             [alt]="pokemon.name"

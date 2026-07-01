@@ -1,5 +1,9 @@
 <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 justify-items-center">
-  @for (poke of poke(); track poke) {
-    <poke-list-item-component [imageUrl]="poke.sprite_animated"></poke-list-item-component>
+  @for (poke of poke(); track poke.id) {
+    <poke-list-item-component 
+      [imageUrl]="poke.sprite_animated" 
+      [pokemonId]="poke.id"
+      (pokemonClick)="onPokemonClick($event)">
+    </poke-list-item-component>
   }
 </div>
