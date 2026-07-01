@@ -17,18 +17,27 @@ export class PokemonService {
   private http = inject(HttpClient);
   private readonly GENERATION_5_LIMIT = 156;
   private readonly GENERATION_5_OFFSET = 493;
+  private readonly GENERATION_3_LIMIT = 135;
+  private readonly GENERATION_3_OFFSET = 251;
 
   private isLoadingMore = signal(false);
   private currentOffset = signal(this.GENERATION_5_OFFSET);
 
+  private isLoadingMoreGen3 = signal(false);
+  private currentOffsetGen3 = signal(this.GENERATION_3_OFFSET);
+
   trendingPokemon = signal<PokemonCatalog[]>([]);
   trendingPokemonLoading = signal(true);
+
+  generation3Pokemon = signal<PokemonCatalog[]>([]);
+  generation3PokemonLoading = signal(true);
 
   searchHistory = signal<Record<string, PokemonCatalog[]>>(this.loadHistoryFromStorage());
   searchHistoryKeys = computed(() => Object.keys(this.searchHistory()));
 
   constructor() {
     this.loadInitialPokemon();
+    this.loadInitialGeneration3Pokemon();
   }
 
   /// HISTORY ///
@@ -52,6 +61,11 @@ export class PokemonService {
   private loadInitialPokemon(): void {
     this.trendingPokemonLoading.set(true);
     this.loadMorePokemon();
+  }
+
+  private loadInitialGeneration3Pokemon(): void {
+    this.generation3PokemonLoading.set(true);
+    this.loadMoreGeneration3Pokemon();
   }
 
   loadMorePokemon(): void {
@@ -103,6 +117,59 @@ export class PokemonService {
           console.error('Error cargando más Pokémon:', error);
           this.isLoadingMore.set(false);
           this.trendingPokemonLoading.set(false);
+        },
+      });
+  }
+
+  loadMoreGeneration3Pokemon(): void {
+    if (this.isLoadingMoreGen3()) return;
+
+    if (this.generation3Pokemon().length >= this.GENERATION_3_LIMIT) {
+      console.log('Ya llegaste al límite de 135 Pokémon de Generación 3. No se cargarán más.');
+      this.generation3PokemonLoading.set(false);
+      return;
+    }
+    const loadedCount = this.generation3Pokemon().length;
+    const remainingPokemons = this.GENERATION_3_LIMIT - loadedCount;
+    const nextLimit = Math.min(50, remainingPokemons);
+
+    if (nextLimit <= 0) return;
+    this.isLoadingMoreGen3.set(true);
+    console.log(`Cargando ${nextLimit} Pokémon de Generación 3... (${loadedCount}/${this.GENERATION_3_LIMIT})`);
+
+    this.getPokemonList(nextLimit, this.currentOffsetGen3())
+      .pipe(
+        switchMap((listResponse) => {
+          const pokemonDetailsRequests = listResponse.results.map((pokemon) =>
+            this.getPokemonSpriteDetails(pokemon.url),
+          );
+          return forkJoin(pokemonDetailsRequests);
+        }),
+        map((pokemonDetails) => {
+          return pokemonDetails.map((pokemon) => PokeMapper.mapToPokemonCatalog(pokemon));
+        }),
+      )
+      .subscribe({
+        next: (newPokemons) => {
+          this.generation3Pokemon.update((current) => [...current, ...newPokemons]);
+          this.currentOffsetGen3.update((offset) => offset + newPokemons.length);
+          this.isLoadingMoreGen3.set(false);
+
+          if (this.generation3Pokemon().length >= this.GENERATION_3_LIMIT) {
+            this.generation3PokemonLoading.set(false);
+            console.log(
+              `Completo! Cargados ${this.generation3Pokemon().length} Pokémon de la Generación 3`,
+            );
+          }
+
+          console.log(
+            `Cargados ${newPokemons.length} Pokémon de Generación 3. Total: ${this.generation3Pokemon().length}`,
+          );
+        },
+        error: (error) => {
+          console.error('Error cargando más Pokémon de Generación 3:', error);
+          this.isLoadingMoreGen3.set(false);
+          this.generation3PokemonLoading.set(false);
         },
       });
   }

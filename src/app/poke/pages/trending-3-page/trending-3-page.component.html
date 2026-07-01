@@ -1,0 +1,3 @@
+<div class="h-screen overflow-y-auto" (scroll)="onScroll($event)" #groupDiv>
+  <poke-masonry-component [pokemons]="pokeService.generation3Pokemon()" />
+</div>

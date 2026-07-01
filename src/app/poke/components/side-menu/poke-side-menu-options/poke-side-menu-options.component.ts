@@ -25,6 +25,12 @@ export class PokeSideMenuOptionsComponent {
       route: '/dashboard/trending',
     },
     {
+      label: 'Trending 3',
+      sublabel: 'Generación 3',
+      icon: 'fa-solid fa-fire',
+      route: '/dashboard/trending-3',
+    },
+    {
       label: 'Buscador',
       sublabel: 'Buscar pokemon',
       icon: 'fa-solid fa-magnifying-glass',

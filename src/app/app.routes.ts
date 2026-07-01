@@ -15,6 +15,10 @@ export const routes: Routes = [
         loadComponent: () => import('./poke/pages/search-page/search-page.component'),
       },
       {
+        path: 'trending-3',
+        loadComponent: () => import('./poke/pages/trending-3-page/trending-3-page.component'),
+      },
+      {
         path: 'history/:query',
         loadComponent: () => import('./poke/pages/poke-history/poke-history.component'),
       },
