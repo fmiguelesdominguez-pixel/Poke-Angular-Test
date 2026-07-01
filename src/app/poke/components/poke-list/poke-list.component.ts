@@ -13,6 +13,8 @@ export class PokeListComponent {
   private router = inject(Router);
 
   onPokemonClick(pokemonId: number): void {
-    this.router.navigate(['dashboard', 'pokemon', pokemonId]);
+    this.router.navigate(['dashboard', 'pokemon', pokemonId], {
+      state: { returnUrl: this.router.url }
+    });
   }
 }

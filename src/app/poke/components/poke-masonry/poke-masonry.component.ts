@@ -12,6 +12,8 @@ export class PokeMasonry {
   private router = inject(Router);
 
   onPokemonClick(pokemon: PokemonCatalog): void {
-    this.router.navigate(['dashboard', 'pokemon', pokemon.id]);
+    this.router.navigate(['dashboard', 'pokemon', pokemon.id], {
+      state: { returnUrl: this.router.url }
+    });
   }
 }

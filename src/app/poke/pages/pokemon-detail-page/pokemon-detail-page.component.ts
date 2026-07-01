@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { PokemonService } from '../../services/poke.service';
 import { Pokemon } from '../../interfaces/poke.interfaces';
 import { TitleCasePipe } from '@angular/common';
@@ -13,15 +14,19 @@ import { TitleCasePipe } from '@angular/common';
 export default class PokemonDetailPageComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private location = inject(Location);
   private pokeService = inject(PokemonService);
   private cdr = inject(ChangeDetectorRef);
 
   pokemon: Pokemon | null = null;
   loading = true;
   error = false;
+  returnUrl: string | null = null;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    this.returnUrl = window.history.state?.['returnUrl'] || null;
+    
     if (id) {
       this.pokeService.getPokemonDetails(+id).subscribe({
         next: (pokemon) => {
@@ -41,7 +46,11 @@ export default class PokemonDetailPageComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['dashboard', 'trending']);
+    if (this.returnUrl) {
+      this.router.navigateByUrl(this.returnUrl);
+    } else {
+      this.location.back();
+    }
   }
 
   getNormalSprite(): string {
